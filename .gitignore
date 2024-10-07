@@ -2,23 +2,23 @@
 backend/node_modules/
 frontend/node_modules/
 
-# Ignore dependencies in frontend
-frontend/.pnp
-frontend/.pnp.js
+# # Ignore dependencies in frontend
+# frontend/.pnp
+# frontend/.pnp.js
 
-# Testing
-frontend/coverage/
+# # Testing
+# frontend/coverage/
 
-# Production
-frontend/build/
+# # Production
+# frontend/build/
 
-# Misc
-frontend/.DS_Store
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
+# # Misc
+# frontend/.DS_Store
+# frontend/.env.local
+# frontend/.env.development.local
+# frontend/.env.test.local
+# frontend/.env.production.local
 
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
+# frontend/npm-debug.log*
+# frontend/yarn-debug.log*
+# frontend/yarn-error.log*
