@@ -75,6 +75,7 @@ exports.register = async (req, res) => {
   
       const payload = { user: { id: user.id } };
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+      console.log(token);
       res.json({ token });
     } catch (err) {
       console.error(err.message);
