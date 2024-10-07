@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import "./Payment.css";
 
 const Payment = () => {
-  
+  const navigate = useNavigate();
+
   const [recipientAccountNumber, setRepAccNumber] = useState('');
   const [recipientBankName, setRepBankName] = useState('');
   const [recipientAccOwnerName, setRepAccOwnerName] = useState('');
@@ -11,61 +14,54 @@ const Payment = () => {
   const [currency, setCurrency] = useState('');
   const [bankName, setBankName] = useState('');
   const [error, setError] = useState('');
-    
-    
-    
-    
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem('token');
 
-        const token = localStorage.getItem('token');
+      // Make sure the token is available
+      if (!token) {
+        setError('User is not authenticated. Please log in.');
+        return;
+      }
 
-            // Make sure the token is available
-            if (!token) {
-                setError('User is not authenticated. Please log in.');
-                return;
-            }
+      const response = await fetch('https://localhost:5000/api/payment', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          recipientAccountNumber,
+          recipientBankName,
+          recipientAccOwnerName,
+          accountType,
+          swiftCode,
+          amount,
+          currency,
+          bankName,
+        }),
+      });
 
+      const data = await response.json();
 
-        const response = await fetch('https://localhost:5000/api/payment', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              recipientAccountNumber,
-              recipientBankName,
-              recipientAccOwnerName,
-              accountType,
-              swiftCode,
-              amount,
-              currency,
-              bankName,
-            }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            alert('Payment completed successfully!');
-        } else {
-            setError(data.errors ? data.errors[0].msg : 'Invalid data');
-        }
+      if (response.ok) {
+        alert('Payment completed successfully!');
+      } else {
+        setError(data.errors ? data.errors[0].msg : 'Invalid data');
+      }
     } catch (err) {
-        setError('An error occurred. Please try again.');
+      setError('An error occurred. Please try again.');
     }
-};
+  };
 
-  // Handle form submission
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     // You can handle form submission here (e.g., sending the form data to an API)
-//     console.log(formData);
-//   };
+  const handleLogout = () => {
+    // Clear token and navigate to login page
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
     <div className="payment-form-container">
@@ -188,6 +184,11 @@ const Payment = () => {
         {/* Submit Button */}
         <button type="submit">Pay Now</button>
       </form>
+
+      {/* Logout Button */}
+      <button className="logout-button" onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 };
