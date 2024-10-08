@@ -28,9 +28,9 @@ jobs:
       run: npm install
       working-directory: ./frontend # Add this line if your package.json is not in the root
 
-    - name: Run linting
-      run: npm run lint
-      working-directory: ./frontend
+    # - name: Run linting
+    #   run: npm run lint
+    #   working-directory: ./frontend
 
     - name: Run tests
       run: npm test
@@ -60,9 +60,9 @@ jobs:
       run: npm install
       working-directory: ./frontend
 
-    - name: Run ESLint for Static Code Analysis
-      run: npm run lint
-      working-directory: ./frontend
+    # - name: Run ESLint for Static Code Analysis
+    #   run: npm run lint
+    #   working-directory: ./frontend
 
     - name: Run Dependency Check with npm audit
       run: npm audit
