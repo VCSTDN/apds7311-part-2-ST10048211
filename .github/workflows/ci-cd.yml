@@ -3,63 +3,57 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Change this to your main branch name if different
+      - main
   pull_request:
     branches:
-      - main  # Run for PRs targeting the main branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'  # Change to your preferred Node.js version
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
 
-      - name: Install dependencies
-        run: |
-          cd frontend  # Change to your frontend directory
-          npm install  # or yarn install if you're using Yarn
+    - name: Install dependencies
+      run: npm install
 
-      - name: Run tests
-        run: |
-          cd frontend  # Change to your frontend directory
-          npm test  # or yarn test if you're using Yarn
+    - name: Run linting
+      run: npm run lint
 
-      - name: Build the application
-        run: |
-          cd frontend  # Change to your frontend directory
-          npm run build  # Adjust based on your build command
+    - name: Run tests
+      run: npm test
 
-  deploy:
+    - name: Build application
+      run: npm run build
+
+  security:
     runs-on: ubuntu-latest
-    needs: build  # This job will wait for the build job to complete
+    needs: build
 
     steps:
-      - name: Check out the code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Deploy to Production
-        run: |
-          echo "Deploying application..."
-          
-          # Install production dependencies
-          echo "Installing production dependencies..."
-          cd frontend  # Change to your frontend directory
-          npm install --production  # or yarn install --production if using Yarn
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
 
-          # Example deployment commands (customize as needed)
-          echo "Starting deployment process..."
-          scp -r ./frontend/build user@yourserver.com:/path/to/deploy  # For example, using SCP to copy files
-          ssh user@yourserver.com 'cd /path/to/deploy && npm install --production'  # SSH into the server to install production dependencies
+    - name: Install dependencies
+      run: npm install
 
-          # Restart the application
-          echo "Restarting the application..."
-          ssh user@yourserver.com 'pm2 restart your-app-name'  # Using PM2 to manage application processes
+    - name: Run ESLint for Static Code Analysis
+      run: npm run lint
 
-          echo "Deployment completed successfully."
+    - name: Run Dependency Check with npm audit
+      run: npm audit
+
+    - name: Run SAST using NodeJsScan
+      uses: a13xp0p0v/nodejsscan-action@v1
