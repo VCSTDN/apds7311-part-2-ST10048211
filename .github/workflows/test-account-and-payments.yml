@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Login Component
+name: CI/CD Pipeline - Accounts and Payments Component
 
 on:
   push:
