@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 
+
+export const isPasswordValid = (password) => {
+    const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordPolicy.test(password);
+};
+
+
 const Register = () => {
     const [fullName, setFullName] = useState('');
     const [idNumber, setIDNumber] = useState('');
