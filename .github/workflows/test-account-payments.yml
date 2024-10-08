@@ -23,10 +23,10 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ./frontend # Update this path if necessary
+      working-directory: ./frontend
 
     - name: Run tests for Account and Payments component
-      run: npm test -- AccountAndPayments.test.js
+      run: npm test -- src/components/AccountAndPayments.test.js
       working-directory: ./frontend
 
     - name: Build application
