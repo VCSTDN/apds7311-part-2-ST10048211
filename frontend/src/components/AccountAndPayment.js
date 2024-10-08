@@ -14,6 +14,7 @@ const Payment = () => {
   const [currency, setCurrency] = useState('');
   const [bankName, setBankName] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,7 +49,18 @@ const Payment = () => {
       const data = await response.json();
 
       if (response.ok) {
+        
+        setSuccess('Payment completed successfully!');
         alert('Payment completed successfully!');
+          // Reset the form fields
+          setRepAccNumber('');
+          setRepBankName('');
+          setRepAccOwnerName('');
+          setAccType('');
+          setSwiftCode('');
+          setAmount('');
+          setCurrency('');
+          setBankName('');
       } else {
         setError(data.errors ? data.errors[0].msg : 'Invalid data');
       }
@@ -181,6 +193,9 @@ const Payment = () => {
           </select>
         </fieldset>
 
+
+        {error && <p id="error" style={{ color: 'red' }}>{error}</p>}
+        {success && <p id="success" style={{ color: 'green' }}>{success}</p>}
         {/* Submit Button */}
         <button type="submit">Pay Now</button>
       </form>

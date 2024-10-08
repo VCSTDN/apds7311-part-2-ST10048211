@@ -1,0 +1,45 @@
+name: Test Account and Payments
+
+on:
+  push:
+    branches:
+      - main  # Change to your default branch if necessary
+  pull_request:
+    branches:
+      - main  # Change to your default branch if necessary
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'  # Use the Node.js version you're using
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./frontend
+
+    - name: Run tests
+      run: npm test -- AccountAndPayments.test.js
+      working-directory: ./frontend
+
+    - name: Upload test results
+      if: always()  # Always run this step, even if tests fail
+      run: |
+        mkdir -p test-results
+        mv coverage/lcov.info test-results/coverage.info  # Move coverage info if you are generating it
+        mv jest-junit.xml test-results/  # Move junit report if you are generating it
+      env:
+        CI: true  # Set environment variable to run tests in CI mode
+
+    - name: Upload test results to GitHub
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: test-results/

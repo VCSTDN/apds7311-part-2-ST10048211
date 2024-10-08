@@ -29,62 +29,49 @@ describe('Payment Component', () => {
         expect(screen.getByRole('button', { name: /pay now/i })).toBeInTheDocument();
     });
 
-    // test('displays error if user is not authenticated', () => {
-    //     render(
-    //         <BrowserRouter>
-    //             <Payment />
-    //         </BrowserRouter>
-    //     );
+    test('successful payment alert and token validation', async () => {
+        // Mock the token and fetch API response
+        localStorage.setItem('token', 'validToken');
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({}),
+            })
+        );
 
-    //     const submitButton = screen.getByRole('button', { name: /pay now/i });
-    //     fireEvent.click(submitButton);
+        render(
+            <BrowserRouter>
+                <Payment />
+            </BrowserRouter>
+        );
 
-    //     expect(screen.getByText('User is not authenticated. Please log in.')).toBeInTheDocument();
-    // });
+        const accountOwnerInput = screen.getByLabelText("Account Owner's Name");
+        const submitButton = screen.getByRole('button', { name: /pay now/i });
 
-    // test('successful payment alert and token validation', async () => {
-    //     // Mock the token and fetch API response
-    //     localStorage.setItem('token', 'validToken');
-    //     global.fetch = jest.fn(() =>
-    //         Promise.resolve({
-    //             ok: true,
-    //             json: () => Promise.resolve({}),
-    //         })
-    //     );
+        fireEvent.change(accountOwnerInput, { target: { value: 'John Doe' } });
+        fireEvent.click(submitButton);
 
-    //     render(
-    //         <BrowserRouter>
-    //             <Payment />
-    //         </BrowserRouter>
-    //     );
+        expect(await screen.findByText('Payment completed successfully!')).toBeInTheDocument();
+    });
 
-    //     const accountOwnerInput = screen.getByLabelText("Account Owner's Name");
-    //     const submitButton = screen.getByRole('button', { name: /pay now/i });
+    test('displays error when API call fails', async () => {
+        localStorage.setItem('token', 'validToken');
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                json: () => Promise.resolve({ errors: [{ msg: 'Invalid data' }] }),
+            })
+        );
 
-    //     fireEvent.change(accountOwnerInput, { target: { value: 'John Doe' } });
-    //     fireEvent.click(submitButton);
+        render(
+            <BrowserRouter>
+                <Payment />
+            </BrowserRouter>
+        );
 
-    //     expect(await screen.findByText('Payment completed successfully!')).toBeInTheDocument();
-    // });
+        const submitButton = screen.getByRole('button', { name: /pay now/i });
+        fireEvent.click(submitButton);
 
-    // test('displays error when API call fails', async () => {
-    //     localStorage.setItem('token', 'validToken');
-    //     global.fetch = jest.fn(() =>
-    //         Promise.resolve({
-    //             ok: false,
-    //             json: () => Promise.resolve({ errors: [{ msg: 'Invalid data' }] }),
-    //         })
-    //     );
-
-    //     render(
-    //         <BrowserRouter>
-    //             <Payment />
-    //         </BrowserRouter>
-    //     );
-
-    //     const submitButton = screen.getByRole('button', { name: /pay now/i });
-    //     fireEvent.click(submitButton);
-
-    //     expect(await screen.findByText('Invalid data')).toBeInTheDocument();
-    // });
+        expect(await screen.findByText('Invalid data')).toBeInTheDocument();
+    });
 });
