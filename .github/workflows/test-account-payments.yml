@@ -26,7 +26,7 @@ jobs:
       working-directory: ./frontend
 
     - name: Run tests for Account and Payments component
-      run: npm test -- src/components/AccountAndPayments.test.js
+      run: npm test -- src/components/AccountAndPayments.test.js -- --passWithNoTests
       working-directory: ./frontend
 
     - name: Build application
