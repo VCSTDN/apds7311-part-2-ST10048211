@@ -1,6 +1,12 @@
-name: Test Account and Payments Component
+name: CI/CD Pipeline - Account and Payments Component
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test-account-payments:
@@ -17,6 +23,12 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./frontend # Update this path if necessary
 
     - name: Run tests for Account and Payments component
       run: npm test -- AccountAndPayments.test.js
+      working-directory: ./frontend
+
+    - name: Build application
+      run: npm run build
+      working-directory: ./frontend

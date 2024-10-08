@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Login Component
+name: CI/CD Pipeline - Integration Tests
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test-login:
+  test-integration:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +25,8 @@ jobs:
       run: npm install
       working-directory: ./frontend # Update this path if necessary
 
-    - name: Run tests for Login component
-      run: npm test -- Login.test.js
+    - name: Run integration tests
+      run: npm test -- Register.test.js
       working-directory: ./frontend
 
     - name: Build application
